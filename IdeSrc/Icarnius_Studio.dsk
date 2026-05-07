@@ -1,7 +1,19 @@
 [Workspace]
 CurrentProject=WebApp.src
 Location=C:\Users\ortiz\FutbolWebApp\IdeSrc\Icarnius_Studio.dsk
-CreateNew=-1
+CreateNew=4
 [TabWindows]
-GroupCount=0
+GroupCount=1
 HorizontalGroups=1
+[TabGroup0]
+GroupSize=40
+SelectedTab=0
+[Window0]
+Filename=Workspace Dashboard
+ViewType=101
+Top=21
+Left=0
+Bottom=718
+Right=1103
+TabIndex=0
+TabGroup=0
