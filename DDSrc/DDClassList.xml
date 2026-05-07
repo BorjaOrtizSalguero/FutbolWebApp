@@ -35,6 +35,17 @@
 			</DDClasses>
 		</Table>
 		<Table>
+			<tableNumber>5</tableNumber>
+			<tableName>jugador</tableName>
+			<DDClasses>
+				<DDClass>
+					<className>cjugadorDataDictionary</className>
+					<classFile>cjugadorDataDictionary.dd</classFile>
+					<preferred>true</preferred>
+				</DDClass>
+			</DDClasses>
+		</Table>
+		<Table>
 			<tableNumber>7</tableNumber>
 			<tableName>liga</tableName>
 			<DDClasses>
