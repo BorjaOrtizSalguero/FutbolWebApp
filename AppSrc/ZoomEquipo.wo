@@ -66,47 +66,21 @@ Object oZoomEquipo is a cWebView
             End_Procedure
         End_Object 
 
-        Object oequipoEntrenador is a cWebForm
-            Entry_Item equipo.Entrenador
-            Set piColumnSpan to 12
-            Set piColumnIndex to 0
-            Set peLabelPosition to lpTop
-            Set psLabel to "Entrenador"
-        End_Object 
-
-        Object oequipoJugadores is a cWebForm
-            Entry_Item equipo.Jugadores
-            Set piColumnSpan to 2
-            Set piColumnIndex to 0
-            Set peLabelPosition to lpTop
-            Set psLabel to "Jugadores"
-        End_Object 
-
-        Object oequipoJugadoresMax is a cWebForm
-            Entry_Item equipo.JugadoresMax
-            Set piColumnSpan to 2
-            Set piColumnIndex to 2
-            Set peLabelPosition to lpTop
-            Set psLabel to "JugadoresMax"
-        End_Object 
-
-        Object oShowEquiposButton is a cWebForm
-            Entry_Item equipo.ID
-            Set piColumnSpan to 12
-            Set piColumnIndex to 0
-            Set peLabelPosition to lpTop
-            Set psLabel to "Ver Equipos de Liga"
-            Set pbPromptButton to True
-
-            WebRegisterPath ntNavigateForward oSelectEquipo
-
-            Procedure OnPrompt
-                Send NavigatePath
-            End_Procedure
-        End_Object 
     End_Object 
 
     Object oActionGroup is a cWebMenuGroup
+
+        Object oVerJugadoresBtn is a cWebMenuItem
+            Set psCSSClass to "WebIcon_List"
+            Set psCaption to "Ver Jugadores"
+
+            WebRegisterPath ntNavigateForward oSelectEquipo
+
+            Procedure OnClick
+                Send NavigatePath
+            End_Procedure
+
+        End_Object
 
         Object oSaveBtn is a cWebMenuItem
             Set psCSSClass to "WebSaveMenuItem"

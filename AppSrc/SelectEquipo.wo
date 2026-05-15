@@ -11,6 +11,7 @@ Use cWebColumn.pkg
 
 Use cligaDataDictionary.dd
 Use cequipoDataDictionary.dd
+Use ZoomEquipo.wo
 
 Object oSelectEquipo is a cWebView
     Set psCaption to "SelectEquipo"
@@ -20,16 +21,15 @@ Object oSelectEquipo is a cWebView
     Set pbShowCaption to False
     Set piMaxWidth to 1024
 
-    Object oliga_DD is a cligaDataDictionary
-    End_Object 
+    Object oLiga_DD is a cligaDataDictionary
+    End_Object
 
-    Object oequipo_DD is a cequipoDataDictionary
-        Set DDO_Server to oliga_DD
-    End_Object 
+    Object oEquipo_DD is a cequipoDataDictionary
+        Set DDO_Server to oLiga_DD
+    End_Object
 
-    Set Main_DD to oequipo_DD
-    Set Server  to oequipo_DD
-
+    Set Main_DD to oEquipo_DD
+    Set Server  to oEquipo_DD
 
     Object oList is a cWebList
         Set piColumnSpan to 0
@@ -39,34 +39,33 @@ Object oSelectEquipo is a cWebView
         Set pbShowHeader to False
         Set piSortColumn to 0
 
-        Object oequipoID is a cWebColumn
-            Entry_Item equipo.ID
-            Set psCaption to "equipo.ID"
+        Object oEquipoID is a cWebColumn
+            Entry_Item Equipo.ID
+            Set psCaption to "ID"
             Set piWidth to 100
-        End_Object 
+        End_Object
 
-        Object oequipoNombre is a cWebColumn
-            Entry_Item equipo.Nombre
-            Set psCaption to "equipo.Nombre"
-            Set piWidth to 1201
-        End_Object 
+        Object oEquipoNombre is a cWebColumn
+            Entry_Item Equipo.Nombre
+            Set psCaption to "Nombre"
+            Set piWidth to 500
+        End_Object
 
-        Object oligaID is a cWebColumn
-            Entry_Item liga.ID
-            Set psCaption to "equipo.LigaID"
+        Object oLigaID is a cWebColumn
+            Entry_Item Liga.ID
+            Set psCaption to "LigaID"
             Set piWidth to 100
-        End_Object 
+        End_Object
 
         Object oDetailButton is a cWebColumnButton
-            Set psCaption to "btn"
+            Set psCaption to ""
             Set piWidth to 45
             Set pbFixedWidth to True
             Set pbResizable to False
-            Set piListRowSpan to 1
             Set psBtnCssClass to "WebButtonIcon WebIcon_Info"
             Set peAlign to alignRight
 
-            WebRegisterPath ntNavigateForward oZoomJugador
+            WebRegisterPath ntNavigateForward oZoomEquipo
 
             Procedure OnClick
                 Send NavigatePath
@@ -76,38 +75,13 @@ Object oSelectEquipo is a cWebView
                 Move True to NavigateData.bReadOnly
             End_Procedure
 
-        End_Object 
-
-        WebRegisterPath ntNavigateForward oZoomJugador
+        End_Object
 
         Procedure OnRowClick String sRowId
-            tWebNavigateData NavigateData
-            Get GetNavigateData to NavigateData
-
-            Case Begin
-                Case (NavigateData.eNavigateType = nfFromParent)
-                    Send NavigateForward of oZoomJugador Self
-                    Case Break
-
-                Case (NavigateData.eNavigateType = nfFromChild)
-                    Send NavigateClose Self
-                    Case Break
-
-                Case (NavigateData.eNavigateType = nfFromMain)
-                    Send NavigateClose Self
-                    Case Break
-
-                Case Else // must be nfUndefined
-                    Send NavigateForward of oZoomJugador Self
-
-            Case End
+            Send NavigateForward of oZoomEquipo Self
         End_Procedure
 
-        Procedure OnGetNavigateForwardData tWebNavigateData ByRef NavigateData Handle hoToView
-            Move True to NavigateData.bReadOnly
-        End_Procedure
-
-    End_Object 
+    End_Object
 
     Object oActionGroup is a cWebMenuGroup
 
@@ -119,13 +93,13 @@ Object oSelectEquipo is a cWebView
                 Send Search of oList
             End_Procedure
 
-        End_Object 
+        End_Object
 
         Object oNewButton is a cWebMenuItem
             Set psCSSClass to "WebClearMenuItem"
             Set psCaption to "New"
 
-            WebRegisterPath ntNavigateForward oZoomJugador
+            WebRegisterPath ntNavigateForward oZoomEquipo
 
             Procedure OnClick
                 Send NavigatePath
@@ -135,41 +109,31 @@ Object oSelectEquipo is a cWebView
                 Move True to NavigateData.bNewRecord
             End_Procedure
 
-        End_Object 
-    End_Object 
+        End_Object
+
+    End_Object
 
     Procedure OnNavigateForward tWebNavigateData NavigateData Integer hoInvokingView Integer hoInvokingObject
-        Handle hoDD
-        
+
         WebSet pbRender of oNewButton to True
         WebSet pbRender of oDetailButton to True
 
-        Get Server to hoDD
-
         Case Begin
+
             Case (NavigateData.eNavigateType = nfFromParent)
-                // If from parent, this is a constrained drill down
-                // Filter equipos by LigaID from parent (ZoomEquipo)
-                Send Constrain of hoDD Table (NavigateData.iTable) Column (NavigateData.iColumn) _
-                                         With (NavigateData.sRowID)
-                WebSet pbRender of oNewButton to False
                 Case Break
 
             Case (NavigateData.eNavigateType = nfFromChild)
-                // If from child, this is a probably a parent lookup from a Zoom
                 Case Break
 
             Case (NavigateData.eNavigateType = nfFromMain)
-                // If from main, this is a probably a main-file lookup from a Zoom
                 WebSet pbRender of oDetailButton to False
                 Case Break
 
-            Case Else // must be nfUndefined
-                // This may be the start of a drilldown query or this may be used for some kind of custom query.
+            Case Else
 
         Case End
 
     End_Procedure
 
-
-End_Object 
+End_Object

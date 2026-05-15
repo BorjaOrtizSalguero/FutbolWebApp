@@ -59,6 +59,14 @@ Object oZoomJugador is a cWebView
             Set psLabel to "Apellido"
         End_Object 
 
+        Object ojugadorNacionalidad is a cWebForm
+            Entry_Item jugador.Nacionalidad
+            Set piColumnSpan to 12
+            Set piColumnIndex to 0
+            Set peLabelPosition to lpTop
+            Set psLabel to "Nacionalidad"
+        End_Object 
+
         Object oequipoID is a cWebForm
             Entry_Item equipo.ID
             Set piColumnSpan to 2
@@ -74,28 +82,6 @@ Object oZoomJugador is a cWebView
             End_Procedure
         End_Object 
 
-        Object ojugadorNumeroCamiseta is a cWebForm
-            Entry_Item jugador.NumeroCamiseta
-            Set piColumnSpan to 2
-            Set piColumnIndex to 2
-            Set peLabelPosition to lpTop
-            Set psLabel to "Camiseta"
-        End_Object 
-
-        Object ojugadorPosicion is a cWebForm
-            Entry_Item jugador.Posicion
-            Set piColumnSpan to 2
-            Set piColumnIndex to 4
-            Set peLabelPosition to lpTop
-            Set psLabel to "Posicion"
-            Set pbPromptButton to True
-
-            WebRegisterPath ntNavigateForward oSelectPosicion
-
-            Procedure OnPrompt
-                Send NavigatePath
-            End_Procedure
-        End_Object 
     End_Object 
 
     Object oActionGroup is a cWebMenuGroup
@@ -178,10 +164,6 @@ Object oZoomJugador is a cWebView
     End_Procedure
 
     Procedure OnNavigateForward tWebNavigateData NavigateData Integer hoInvokingView Integer hoInvokingObject
-        Handle hoDD
-        
-        Get Server to hoDD
-
         Case Begin
             Case (NavigateData.eNavigateType = nfFromMain)
                 // If from main, this is a probably a main file Select to Zoom.
@@ -189,9 +171,6 @@ Object oZoomJugador is a cWebView
 
             Case (NavigateData.eNavigateType = nfFromParent)
                 // If from parent, this is a constrained drill down.
-                // Filter jugadores by EquipoID from parent (SelectEquipo)
-                Send Constrain of hoDD Table (NavigateData.iTable) Column (NavigateData.iColumn) _
-                                         With (NavigateData.sRowID)
                 Case Break
 
             Case (NavigateData.eNavigateType = nfFromChild)
