@@ -19,12 +19,11 @@ Object oSelectPosicion is a cWebView
     Set pbShowCaption to False
     Set piMaxWidth to 1024
 
-    Object oposicion_DD is a cposicionDataDictionary
-    End_Object 
+    Object oPosicion_DD is a cposicionDataDictionary
+    End_Object
 
-    Set Main_DD to oposicion_DD
-    Set Server  to oposicion_DD
-
+    Set Main_DD to oPosicion_DD
+    Set Server  to oPosicion_DD
 
     Object oList is a cWebList
         Set piColumnSpan to 0
@@ -34,66 +33,37 @@ Object oSelectPosicion is a cWebView
         Set pbShowHeader to False
         Set piSortColumn to 0
 
-        Object oposicionID is a cWebColumn
-            Entry_Item posicion.ID
-            Set psCaption to "posicion.ID"
+        Object oPosicionID is a cWebColumn
+            Entry_Item Posicion.ID
+            Set psCaption to "ID"
             Set piWidth to 100
-        End_Object 
+        End_Object
 
-        Object oposicionNombre is a cWebColumn
-            Entry_Item posicion.Nombre
-            Set psCaption to "posicion.Nombre"
-            Set piWidth to 1201
-        End_Object 
+        Object oPosicionNombre is a cWebColumn
+            Entry_Item Posicion.Nombre
+            Set psCaption to "Nombre"
+            Set piWidth to 600
+        End_Object
 
         Object oDetailButton is a cWebColumnButton
-            Set psCaption to "btn"
+            Set psCaption to ""
             Set piWidth to 45
             Set pbFixedWidth to True
             Set pbResizable to False
-            Set piListRowSpan to 1
             Set psBtnCssClass to "WebButtonIcon WebIcon_Info"
             Set peAlign to alignRight
 
             Procedure OnClick
-                Send NavigatePath
+                Send NavigateClose Self
             End_Procedure
 
-            Procedure OnGetNavigateForwardData tWebNavigateData ByRef NavigateData Handle hoToView
-                Move True to NavigateData.bReadOnly
-            End_Procedure
-
-        End_Object 
+        End_Object
 
         Procedure OnRowClick String sRowId
-            tWebNavigateData NavigateData
-            Get GetNavigateData to NavigateData
-
-            Case Begin
-                Case (NavigateData.eNavigateType = nfFromParent)
-                    Send NavigateClose Self
-                    Case Break
-
-                Case (NavigateData.eNavigateType = nfFromChild)
-                    Send NavigateClose Self
-                    Case Break
-
-                Case (NavigateData.eNavigateType = nfFromMain)
-                    Send NavigateClose Self
-                    Case Break
-
-                Case Else // must be nfUndefined
-                    // Undefined: No relationship, just close and return selection
-                    Send NavigateClose Self
-
-            Case End
+            Send NavigateClose Self
         End_Procedure
 
-        Procedure OnGetNavigateForwardData tWebNavigateData ByRef NavigateData Handle hoToView
-            Move True to NavigateData.bReadOnly
-        End_Procedure
-
-    End_Object 
+    End_Object
 
     Object oActionGroup is a cWebMenuGroup
 
@@ -105,49 +75,32 @@ Object oSelectPosicion is a cWebView
                 Send Search of oList
             End_Procedure
 
-        End_Object 
+        End_Object
 
-        Object oNewButton is a cWebMenuItem
-            Set psCSSClass to "WebClearMenuItem"
-            Set psCaption to "New"
-
-            Procedure OnClick
-                Send NavigatePath
-            End_Procedure
-
-            Procedure OnGetNavigateForwardData tWebNavigateData ByRef NavigateData Handle hoToView
-                Move True to NavigateData.bNewRecord
-            End_Procedure
-
-        End_Object 
-    End_Object 
+    End_Object
 
     Procedure OnNavigateForward tWebNavigateData NavigateData Integer hoInvokingView Integer hoInvokingObject
-        WebSet pbRender of oNewButton to False
+
         WebSet pbRender of oDetailButton to True
 
         Case Begin
+
             Case (NavigateData.eNavigateType = nfFromParent)
-                // If from parent, this is a constrained drill down
                 Case Break
 
             Case (NavigateData.eNavigateType = nfFromChild)
-                // If from child, this is a probably a parent lookup from a Zoom
                 Case Break
 
             Case (NavigateData.eNavigateType = nfFromMain)
-                // If from main, this is a probably a main-file lookup from a Zoom
                 WebSet pbRender of oDetailButton to False
                 Case Break
 
-            Case Else // must be nfUndefined
-                // Undefined: No relationship, simple selection list
-                // Hide New button since there's no parent context
-                WebSet pbRender of oNewButton to False
+            Case Else
+                // nfUndefined
+                Case Break
 
         Case End
 
     End_Procedure
 
-
-End_Object 
+End_Object

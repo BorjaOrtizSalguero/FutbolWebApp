@@ -11,6 +11,9 @@ Use cWebForm.pkg
 Use cligaDataDictionary.dd
 Use cequipoDataDictionary.dd
 
+Use SelectLiga.wo
+Use SelectJugador.wo
+
 Object oZoomEquipo is a cWebView
     Set piColumnCount to 12
     Set psCaption to "ZoomEquipo"
@@ -20,43 +23,39 @@ Object oZoomEquipo is a cWebView
     Set Verify_Save_Msg to 0
     Set piMaxWidth to 1024
 
-    Object oliga_DD is a cligaDataDictionary
-    End_Object 
+    Object oLiga_DD is a cligaDataDictionary
+    End_Object
 
-    Object oequipo_DD is a cequipoDataDictionary
-        Set DDO_Server to oliga_DD
-    End_Object 
+    Object oEquipo_DD is a cequipoDataDictionary
+        Set DDO_Server to oLiga_DD
+    End_Object
 
-    Set Main_DD to oequipo_DD
-    Set Server  to oequipo_DD
-
+    Set Main_DD to oEquipo_DD
+    Set Server  to oEquipo_DD
 
     Object oWebMainPanel is a cWebPanel
         Set piColumnCount to 12
-        WebSetResponsive piColumnCount rmMobile to 4
 
-        Object oequipoID is a cWebForm
-            Entry_Item equipo.ID
+        Object oEquipoID is a cWebForm
+            Entry_Item Equipo.ID
             Set piColumnSpan to 2
-            Set piColumnIndex to 0
             Set peLabelPosition to lpTop
             Set psLabel to "ID"
-        End_Object 
+        End_Object
 
-        Object oequipoNombre is a cWebForm
-            Entry_Item equipo.Nombre
+        Object oEquipoNombre is a cWebForm
+            Entry_Item Equipo.Nombre
             Set piColumnSpan to 12
-            Set piColumnIndex to 0
             Set peLabelPosition to lpTop
             Set psLabel to "Nombre"
-        End_Object 
+        End_Object
 
-        Object oligaID is a cWebForm
-            Entry_Item liga.ID
+        Object oLigaID is a cWebForm
+            Entry_Item Liga.ID
             Set piColumnSpan to 2
-            Set piColumnIndex to 0
             Set peLabelPosition to lpTop
             Set psLabel to "LigaID"
+
             Set pbPromptButton to True
 
             WebRegisterPath ntNavigateForward oSelectLiga
@@ -64,9 +63,10 @@ Object oZoomEquipo is a cWebView
             Procedure OnPrompt
                 Send NavigatePath
             End_Procedure
-        End_Object 
 
-    End_Object 
+        End_Object
+
+    End_Object
 
     Object oActionGroup is a cWebMenuGroup
 
@@ -74,7 +74,7 @@ Object oZoomEquipo is a cWebView
             Set psCSSClass to "WebIcon_List"
             Set psCaption to "Ver Jugadores"
 
-            WebRegisterPath ntNavigateForward oSelectEquipo
+            WebRegisterPath ntNavigateForward oSelectJugador
 
             Procedure OnClick
                 Send NavigatePath
@@ -90,17 +90,18 @@ Object oZoomEquipo is a cWebView
                 Send Request_Save
             End_Procedure
 
-        End_Object 
+        End_Object
 
         Object oEditBtn is a cWebMenuItem
             Set psCSSClass to "WebEditMenuItem"
             Set psCaption to "Edit"
+
             Procedure OnClick
                 Send ChangeEditMode True
                 Send SetActionButtons
             End_Procedure
 
-        End_Object 
+        End_Object
 
         Object oDeleteBtn is a cWebMenuItem
             Set psCSSClass to "WebDeleteMenuItem"
@@ -111,18 +112,20 @@ Object oZoomEquipo is a cWebView
                 Send Request_Delete
             End_Procedure
 
-        End_Object 
+        End_Object
 
         Object oCancelChangesBtn is a cWebMenuItem
             Set psCSSClass to "WebIcon_Refresh"
             Set psCaption to "Clear Changes"
             Set peActionDisplay to adMenu
+
             Procedure OnClick
                 Send RefreshRecord
             End_Procedure
 
-        End_Object 
-    End_Object 
+        End_Object
+
+    End_Object
 
     Procedure SetActionButtons
         tWebNavigateData NavigateData
@@ -133,7 +136,6 @@ Object oZoomEquipo is a cWebView
         Get GetNavigateData to NavigateData
         Get HasRecord of hoDD to bHasRecord
 
-        // let's hide all buttons and then Show the ones we want
         WebSet pbRender of oEditBtn to False
         WebSet pbRender of oSaveBtn to False
         WebSet pbRender of oCancelChangesBtn to False
@@ -150,30 +152,27 @@ Object oZoomEquipo is a cWebView
     End_Procedure
 
     Procedure OnViewSaved Handle hoServer Boolean bChanged
-        // Close after save
         Send NavigateClose Self
     End_Procedure
 
-    // this will close the view after a delete
     Procedure OnViewDeleted Handle hoDDO
         Send NavigateClose Self
     End_Procedure
 
     Procedure OnNavigateForward tWebNavigateData NavigateData Integer hoInvokingView Integer hoInvokingObject
+
         Case Begin
+
             Case (NavigateData.eNavigateType = nfFromMain)
-                // If from main, this is a probably a main file Select to Zoom.
                 Case Break
 
             Case (NavigateData.eNavigateType = nfFromParent)
-                // If from parent, this is a constrained drill down.
                 Case Break
 
             Case (NavigateData.eNavigateType = nfFromChild)
-                // If from child, this is a probably a parent Zoom from a Zoom.
                 Case Break
 
-            Case Else // must be nfUndefined
+            Case Else
 
         Case End
 
@@ -181,4 +180,4 @@ Object oZoomEquipo is a cWebView
 
     End_Procedure
 
-End_Object 
+End_Object
